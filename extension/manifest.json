@@ -1,15 +1,12 @@
 {
-    "name": "Covid-19 Stats UK",
+    "name": "Historia",
     "version": "1.0.0",
-    "description": "latest covid data of UK",
-    "manifest_version": 3,
-    "author": "Sampurna Chapagain",
-    "action":{
-        "default_popup": "index.html",
-        "default_title": "Latest Covid Report"
-    },
-    "permissions": [
-        "tabs",
-        "history"
-    ]
-}
+    "description": "Record Browser History On Chain Privately",
+    "author": "Vaibhav Maheshwari",
+    "background":{
+        "service_worker": "background.js"
+      },
+    "permissions": ["scripting", "history", "storage"],
+    "host_permissions": ["<all_urls>"],
+    "manifest_version": 3
+  }
