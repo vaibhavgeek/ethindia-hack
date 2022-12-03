@@ -1,6 +1,6 @@
-import { Box, Button, Container, Heading } from "@chakra-ui/react";
-import React from "react";
-
+import { Box, Button, Container, Heading, Text } from "@chakra-ui/react";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import { Web3Storage } from "web3.storage";
 
 function getAccessToken() {
@@ -30,14 +30,48 @@ async function storeFiles(file: File[]) {
 }
 
 export default function SyncHistoryPage() {
-  return (
-    <Container mt={4}>
-      <Heading>Sync Browser History Page</Heading>
+  const [titles, setTitles] = useState<string[]>([]);
+  useEffect(() => {
+    const div = document.querySelector("#history-man");
+    if (div) {
+      setTitles(div.innerHTML.split("<br>"));
+    }
+  }, []);
 
-      <Box>
-        <Button onClick={() => storeFiles(makeFileObject())}>
-          Sync History
-        </Button>
+  return (
+    <Container maxW={"3xl"} mt={4}>
+      <Link href="/">
+        <Heading size={"xl"} cursor={"pointer"}>
+          Kl
+          <Text as={"span"} color={"teal.500"}>
+            ei
+          </Text>
+          o
+        </Heading>
+      </Link>
+      <Heading mt={4}>Connect your browser history</Heading>
+      <Box mt={4} id="history-titles-list">
+        <ul id="list">
+          {titles.map((title, index) => {
+            return (
+              <li className="li-item" key={index}>
+                🌐 {title}
+              </li>
+            );
+          })}
+        </ul>
+      </Box>
+      <Box mt={8}>
+        {titles.length ? (
+          <Button
+            onClick={() => storeFiles(makeFileObject())}
+            colorScheme={"teal"}
+          >
+            Sync History
+          </Button>
+        ) : (
+          <Button colorScheme={"teal"}>Install Extension to Get Started</Button>
+        )}
       </Box>
     </Container>
   );
