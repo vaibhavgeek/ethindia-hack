@@ -1,0 +1,21 @@
+#history-man {
+    display: none;
+}
+
+#history-titles-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.li-item:hover {
+    background-color: #f5f5f5;
+}
+
+.li-item {
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+#list:last-child {
+    border-bottom: none;
+}

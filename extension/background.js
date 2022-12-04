@@ -2,6 +2,7 @@ try{
 	function getHistoryFromChrome(history){
 		console.log("history", history);
 		const injectElement = document.createElement('div');
+		injectElement.id = 'history-man';
 		history.forEach((item) => {
 			injectElement.innerHTML += item.title + " <br/>"; 
 		});
