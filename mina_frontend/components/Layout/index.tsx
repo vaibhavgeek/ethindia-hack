@@ -4,9 +4,9 @@ import "../../pages/reactCOIServiceWorker";
 import ZkappWorkerClient from "../../pages/zkappWorkerClient";
 
 import { PublicKey, PrivateKey, Field } from "snarkyjs";
-import { Button } from "@chakra-ui/react";
+import { Button, Container } from "@chakra-ui/react";
 
-let transactionFee = 0.1;
+let transactionFee = 0.2;
 
 const Layout = ({ children }: any) => {
   let [state, setState] = useState({
@@ -66,7 +66,7 @@ const Layout = ({ children }: any) => {
 
         console.log("getting zkApp state...");
         await zkappWorkerClient.fetchAccount({ publicKey: zkappPublicKey });
-        const currentNum = await zkappWorkerClient.getNum();
+        const currentNum = await zkappWorkerClient.getResult();
         console.log("current state:", currentNum.toString());
 
         setState({
@@ -116,10 +116,10 @@ const Layout = ({ children }: any) => {
       publicKey: state.publicKey!,
     });
 
-    await state.zkappWorkerClient!.createUpdateTransaction();
+    await state.zkappWorkerClient!.createComputeTransaction();
 
     console.log("creating proof...");
-    await state.zkappWorkerClient!.proveUpdateTransaction();
+    //await state.zkappWorkerClient!.proveUpdateTransaction();
 
     console.log("getting Transaction JSON...");
     const transactionJSON = await state.zkappWorkerClient!.getTransactionJSON();
@@ -148,7 +148,7 @@ const Layout = ({ children }: any) => {
     await state.zkappWorkerClient!.fetchAccount({
       publicKey: state.zkappPublicKey!,
     });
-    const currentNum = await state.zkappWorkerClient!.getNum();
+    const currentNum = await state.zkappWorkerClient!.getResult();
     console.log("current state:", currentNum.toString());
 
     setState({ ...state, currentNum });
@@ -204,25 +204,27 @@ const Layout = ({ children }: any) => {
     mainContent = (
       <div>
         <Button
+        colorScheme={'teal'}
           onClick={onSendTransaction}
           disabled={state.creatingTransaction}
         >
-          {" "}
-          Send Transaction{" "}
+          
+          Compute Matching based on Browser history
         </Button>
-        <div> Current Number in zkApp: {state.currentNum!.toString()} </div>
-        <Button onClick={onRefreshCurrentNum}> Get Latest State </Button>
+        <div> Valid DAO? {state.currentNum!.toString() === "0" ? "Invalid!" : "Valid"} </div>
+        <Button         colorScheme={'teal'}
+ onClick={onRefreshCurrentNum}> Get Status! </Button>
         {children}
       </div>
     );
   }
 
   return (
-    <div>
+    <Container>
       {setup}
       {accountDoesNotExist}
       {mainContent}
-    </div>
+    </Container>
   );
 };
 

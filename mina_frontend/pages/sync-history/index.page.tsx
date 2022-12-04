@@ -2,33 +2,33 @@ import { Box, Button, Container, Heading, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Layout from "../../components/Layout";
-// import { Web3Storage } from "web3.storage";
+import { Web3Storage } from "web3.storage";
 
-// function getAccessToken() {
-//   return process.env.NEXT_PUBLIC_WEB3STORAGE_TOKEN as string;
-// }
+function getAccessToken() {
+  return process.env.NEXT_PUBLIC_WEB3STORAGE_TOKEN as string;
+}
 
-// function makeStorageClient() {
-//   return new Web3Storage({ token: getAccessToken() });
-// }
+function makeStorageClient() {
+  return new Web3Storage({ token: getAccessToken() });
+}
 
-// function makeFileObject() {
-//   const browsingVectors = [[new Date()], [1, 2, 3], [3, 2, 1]];
-//   const blob = new Blob([JSON.stringify(browsingVectors)], {
-//     type: "application/json",
-//   });
+function makeFileObject() {
+  const browsingVectors = [[new Date()], [1, 2, 3], [3, 2, 1]];
+  const blob = new Blob([JSON.stringify(browsingVectors)], {
+    type: "application/json",
+  });
 
-//   return [new File([blob], "browsing-vectors.json")];
-// }
+  return [new File([blob], "browsing-vectors.json")];
+}
 
-// async function storeFiles(file: File[]) {
-//   //create a new file in web3.storage
-//   const client = makeStorageClient();
-//   const cid = await client.put(file);
-//   console.log("stored files with cid:", cid);
-//   localStorage.setItem("history-vector-cid", cid);
-//   return cid;
-// }
+async function storeFiles(file: File[]) {
+  //create a new file in web3.storage
+  const client = makeStorageClient();
+  const cid = await client.put(file);
+  console.log("stored files with cid:", cid);
+  localStorage.setItem("history-vector-cid", cid);
+  return cid;
+}
 
 export default function SyncHistoryPage() {
   const [titles, setTitles] = useState<string[]>([]);
@@ -40,7 +40,7 @@ export default function SyncHistoryPage() {
   }, []);
 
   return (
-    <Layout>
+    <div>
       <Container maxW={"3xl"} mt={4}>
         <Link href="/">
           <Heading size={"xl"} cursor={"pointer"}>
@@ -79,7 +79,24 @@ export default function SyncHistoryPage() {
             </Button>
           )}
         </Box>
+        
       </Container>
-    </Layout>
+       <Box bgColor={"teal.500"} py={10} position="fixed" bottom={0} w={"100%"}>
+       <Container color="white" textAlign={"center"}>
+         Built with no sleep by{" "}
+         <a href="https://twitter.com/recurshawn">
+           <span style={{ fontWeight: "bold", textDecoration: "underline" }}>
+             @recurshawn
+           </span>
+         </a>{" "}
+         &{" "}
+         <a href="https://twitter.com/vaibhavgeek">
+           <span style={{ fontWeight: "bold", textDecoration: "underline" }}>
+             @vaibhavgeek
+           </span>
+         </a>
+       </Container>{" "}
+     </Box>
+     </div>
   );
 }

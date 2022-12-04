@@ -2,7 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
-import type { Add } from "../../contracts/src/";
+
 import { Mina, isReady, PublicKey, fetchAccount } from "snarkyjs";
 import {
   Box,
@@ -19,14 +19,13 @@ import Layout from "../components/Layout";
 export default function Home() {
   useEffect(() => {
     (async () => {
-      await isReady;
-      const { Add } = await import("../../contracts/build/src/");
-
-      // Update this to use the address (public key) for your zkApp account
-      // To try it out, you can try this address for an example "Add" smart contract that we've deployed to
-      // Berkeley Testnet B62qisn669bZqsh8yMWkNyCA7RvjrL6gfdr3TQxymDHNhTc97xE5kNV
+       await isReady;
+       const { MatchMeBetter } = await import("./../../circuits_mina/build/src/matchbetter");
+      // // Update this to use the address (public key) for your zkApp account
+      // // To try it out, you can try this address for an example "Add" smart contract that we've deployed to
+      // // Berkeley Testnet B62qisn669bZqsh8yMWkNyCA7RvjrL6gfdr3TQxymDHNhTc97xE5kNV
       const zkAppAddress =
-        "B62qisn669bZqsh8yMWkNyCA7RvjrL6gfdr3TQxymDHNhTc97xE5kNV";
+        "B62qiieACgT2D7v2Bw1Cdvyp867phfDpBZ5WWHhgZJmKdNDMRwccau4";
       // This should be removed once the zkAppAddress is updated.
       if (!zkAppAddress) {
         console.error(
@@ -34,12 +33,12 @@ export default function Home() {
         );
       }
 
-      const zkApp = new Add(PublicKey.fromBase58(zkAppAddress));
+      const zkApp = new MatchMeBetter(PublicKey.fromBase58(zkAppAddress));
     })();
   }, []);
 
   return (
-    <Layout>
+    <div>
       <Head>
         <title>Kleio | Supercharged browsing history</title>
         <meta name="description" content="Supercharging browsing history" />
@@ -103,7 +102,7 @@ export default function Home() {
                 Make the most of your history
               </Button>
             </Link>
-            <Link href="#">
+            <Link href="/match-history">
               <Button variant={"link"} colorScheme={"blue"} size={"md"}>
                 Are you an interested advertiser or community/DAO?
               </Button>
@@ -128,6 +127,6 @@ export default function Home() {
           </a>
         </Container>{" "}
       </Box>
-    </Layout>
+      </div>
   );
 }

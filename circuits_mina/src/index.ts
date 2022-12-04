@@ -1,3 +1,3 @@
-import { MatchMeBetter } from './matchbetter.js';
+import { MatchMeBetter } from './matchbetter';
 
 export { MatchMeBetter };

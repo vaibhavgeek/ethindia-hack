@@ -11,11 +11,11 @@ type Transaction = Awaited<ReturnType<typeof Mina.transaction>>;
 
 // ---------------------------------------------------------------------------------------
 
-import type { Add } from "../../contracts/src/Add";
+import type { MatchMeBetter } from "./../../circuits_mina/build/src";
 
 const state = {
-  Add: null as null | typeof Add,
-  zkapp: null as null | Add,
+  MatchMeBetter: null as null | typeof MatchMeBetter,
+  zkapp: null as null | MatchMeBetter,
   transaction: null as null | Transaction,
 };
 
@@ -32,11 +32,11 @@ const functions = {
     Mina.setActiveInstance(Berkeley);
   },
   loadContract: async (args: {}) => {
-    const { Add } = await import("../../contracts/build/src/Add.js");
-    state.Add = Add;
+    const { MatchMeBetter } = await import("./../../circuits_mina/build/src/matchbetter");
+    state.MatchMeBetter = MatchMeBetter;
   },
   compileContract: async (args: {}) => {
-    await state.Add!.compile();
+    await state.MatchMeBetter!.compile();
   },
   fetchAccount: async (args: { publicKey58: string }) => {
     const publicKey = PublicKey.fromBase58(args.publicKey58);
@@ -44,15 +44,16 @@ const functions = {
   },
   initZkappInstance: async (args: { publicKey58: string }) => {
     const publicKey = PublicKey.fromBase58(args.publicKey58);
-    state.zkapp = new state.Add!(publicKey);
+    state.zkapp = new state.MatchMeBetter!(publicKey);
   },
-  getNum: async (args: {}) => {
-    const currentNum = await state.zkapp!.num.get();
+  getResult: async (args: {}) => {
+    const currentNum = await state.zkapp!.result.get();
     return JSON.stringify(currentNum.toJSON());
   },
-  createUpdateTransaction: async (args: {}) => {
+  createComputeTransaction: async (args: {}) => {
     const transaction = await Mina.transaction(() => {
-      state.zkapp!.update();
+      const x = new Field(1);
+      state.zkapp!.checkComputation(x);
     });
     state.transaction = transaction;
   },

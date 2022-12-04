@@ -5,6 +5,7 @@ const nextConfig = {
 
   pageExtensions: ['page.tsx', 'page.ts', 'page.jsx', 'page.js'],
   webpack(config) {
+    config.experiments = { ...config.experiments, ...{ topLevelAwait: true }};
     config.resolve.alias = {
       ...config.resolve.alias,
       snarkyjs: require('path').resolve('node_modules/snarkyjs'),

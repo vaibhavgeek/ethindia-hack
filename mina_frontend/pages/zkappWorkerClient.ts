@@ -42,13 +42,13 @@ export default class ZkappWorkerClient {
     });
   }
 
-  async getNum(): Promise<Field> {
-    const result = await this._call("getNum", {});
+  async getResult(): Promise<Field> {
+    const result = await this._call("getResult", {});
     return Field.fromJSON(JSON.parse(result as string));
   }
 
-  createUpdateTransaction() {
-    return this._call("createUpdateTransaction", {});
+  createComputeTransaction() {
+    return this._call("createComputeTransaction", {});
   }
 
   proveUpdateTransaction() {
