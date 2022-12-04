@@ -1,3 +1,3 @@
-import { Add } from './Add.js';
+import { MatchMeBetter } from './matchbetter.js';
 
-export { Add };
+export { MatchMeBetter };

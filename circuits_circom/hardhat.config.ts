@@ -17,14 +17,9 @@ const TASK_COMPILE_HASHER = "compile:hasher";
 
 require("dotenv").config();
 
-const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY;
 const TESTNET_PRIVATE_KEY = process.env.TESTNET_PRIVATE_KEY;
-//const MAINNET_PRIVATE_KEY = process.env.MAINNET_PRIVATE_KEY;
 const POLYGON_SCAN_API_KEY = process.env.POLYGON_SCAN_API_KEY;
-const AURORA_PRIVATE_KEY_TESTNET = process.env.AURORA_PRIVATE_KEY_TESTNET;
-const AURORA_PRIVATE_KEY_MAINNET = process.env.AURORA_PRIVATE_KEY_MAINNET;
-const AURORA_EXPLORER_API = process.env.AURORA_EXPLORER_API;
-
+const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY;
 
 const config = {
   solidity: "0.8.13",
@@ -33,7 +28,7 @@ const config = {
     outputBasePath: "./artifacts/circuits",
     ptau: "pot12_final.ptau",
     circuits: [{
-      name: "withdraw",
+      name: "history",
       input: "input.json",
       version: 2,
     }],
@@ -47,46 +42,16 @@ const config = {
       url: `https://polygon-mumbai.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
       accounts: [`${TESTNET_PRIVATE_KEY}`]
     },
-    auroraDev: {
-      url: `https://testnet.aurora.dev`, 
-      accounts: [`${AURORA_PRIVATE_KEY_TESTNET}`],
+    liberty: {
+      url: "https://liberty10.shardeum.org/",
+      chainId: 8080,
+      accounts:[`${TESTNET_PRIVATE_KEY}`]
     },
-    auroraMain: {
-      url: `https://aurora.dev`,
-      accounts: [`${AURORA_PRIVATE_KEY_MAINNET}`]
-    },
-    neonTestNet: {
-      url: `https://testnet.neonevm.org`,
-      accounts: [`${TESTNET_PRIVATE_KEY}`]
-    },
-    neonMainNet: {
-      url: `https://neoevm.org`,
-      accounts: [`${TESTNET_PRIVATE_KEY}`]
-    }
   },
   etherscan: {
     apiKey: {
       polygonMumbai: `${POLYGON_SCAN_API_KEY}`,
-      auroraTestnet: `${AURORA_EXPLORER_API}`
-    },
-    customChains:[
-      {
-        network: "auroraDev",
-        chainId: "1313161555",
-        urls:{
-          apiURL: "https://api.testnet.aurorascan.dev/api",
-          browserURL: "https://testnet.aurorascan.dev"
-        }
-      }, 
-      {
-        network: "auroraMain",
-        chainId: "1313161554",
-        urls:{
-          apiURL: "https://api.aurorascan.dev/api",
-          browserURL: "https://aurorascan.dev"
-        }
-      },
-    ]
+    }
   }
 }
 
@@ -113,31 +78,8 @@ subtask(TASK_CIRCOM_TEMPLATE, "generate Verifier template shipped by SnarkJS")
     fs.writeFileSync("./artifacts/circuits/Verifier.sol", combinedVerifier);
   });
 
-subtask(TASK_COMPILE_HASHER)
-  .setAction(async (hre: HardhatRuntimeEnvironment) => {
-    const outputPath = path.join(__dirname, "artifacts", "contracts", "PoseidonHasher.sol");
-    const outputFile = path.join(outputPath, "PoseidonHasher.json");
-
-    if (!fs.existsSync(outputPath)) {
-      fs.mkdirSync(outputPath, { recursive: true });
-    }
-
-    const contract: Artifact = {
-      _format: "hh-sol-artifact-1",
-      contractName: "PoseidonHasher",
-      sourceName: "contracts/PoseidonHasher.sol",
-      abi: poseidonContract.generateABI(2),
-      bytecode: poseidonContract.createCode(2),
-      deployedBytecode: "",
-      linkReferences: {},
-      deployedLinkReferences: {},
-    }
-
-    fs.writeFileSync(outputFile, JSON.stringify(contract, null, 2));
-  });
 
 task(TASK_COMPILE, "Compiles the entire project, building all artifacts")
   .setAction(async (taskArguments, hre, runSuper) => {
     await runSuper(taskArguments);
-    await hre.run(TASK_COMPILE_HASHER);
   });
